@@ -6,8 +6,10 @@ import ProductCard from '../components/common/ProductCard'
 import CustomSelect from '../components/common/CustomSelect'
 import Header from '../components/common/Header'
 import Footer from '../components/common/Footer'
+import { useSelector } from 'react-redux'
+import { selectAllProducts } from '@/redux/slices/productSlice'
 
-const products = [
+const tempProducts = [
     { id: 1, name: "Revitalizing Rosehip Serum", price: 39.99, category: "Serums", image: "/aloe-cream.jpeg" },
     { id: 2, name: "Soothing Lavender Night Cream", price: 29.99, category: "Moisturizers", image: "/aloe-cream.jpeg" },
     { id: 3, name: "Hydrating Aloe Vera Gel", price: 19.99, category: "Gels", image: "/aloe-cream.jpeg" },
@@ -22,7 +24,7 @@ const products = [
     { id: 12, name: "Anti-Aging Retinol Night Cream", price: 49.99, category: "Moisturizers", image: "/aloe-cream.jpeg" },
 ]
 
-const categories = ['All', ...new Set(products.map(product => product.category))]
+const categories = ['All', ...new Set(tempProducts.map(product => product.category))]
 const sortOptions = [
     { value: 'name', label: 'Sort by Name' },
     { value: 'priceLowToHigh', label: 'Price: Low to High' },
@@ -34,23 +36,24 @@ export default function ProductListingPage() {
     const [selectedCategory, setSelectedCategory] = useState('All')
     const [sortBy, setSortBy] = useState('name')
 
-    const productsPerPage = 8
-    const filteredProducts = selectedCategory === 'All'
-        ? products
-        : products.filter(product => product.category === selectedCategory)
+    const tempProductsPerPage = 8
+    const filteredtempProducts = selectedCategory === 'All'
+        ? tempProducts
+        : tempProducts.filter(product => product.category === selectedCategory)
 
-    const sortedProducts = [...filteredProducts].sort((a, b) => {
+    const sortedtempProducts = [...filteredtempProducts].sort((a, b) => {
         if (sortBy === 'name') return a.name.localeCompare(b.name)
         if (sortBy === 'priceLowToHigh') return a.price - b.price
         if (sortBy === 'priceHighToLow') return b.price - a.price
         return 0
     })
 
-    const indexOfLastProduct = currentPage * productsPerPage
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage
-    const currentProducts = sortedProducts.slice(indexOfFirstProduct, indexOfLastProduct)
+    const indexOfLastProduct = currentPage * tempProductsPerPage
+    const indexOfFirstProduct = indexOfLastProduct - tempProductsPerPage
+    const currenttempProducts = sortedtempProducts.slice(indexOfFirstProduct, indexOfLastProduct)
 
-    const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
+    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+    const products = useSelector(selectAllProducts);
 
     return (
         <>
@@ -84,7 +87,7 @@ export default function ProductListingPage() {
                         </div>
                         <div className='min-h-[68dvh]'>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                                {currentProducts.map(product => (
+                                {products && products?.map(product => (
                                     <ProductCard key={product.id} product={product} type={"buy"} />
                                 ))}
                             </div>
@@ -99,7 +102,7 @@ export default function ProductListingPage() {
                                 >
                                     <ChevronLeft className="w-5 h-5" />
                                 </button>
-                                {[...Array(Math.ceil(sortedProducts.length / productsPerPage))].map((_, index) => (
+                                {[...Array(Math.ceil(sortedtempProducts.length / tempProductsPerPage))].map((_, index) => (
                                     <button
                                         key={index}
                                         onClick={() => paginate(index + 1)}
@@ -111,7 +114,7 @@ export default function ProductListingPage() {
                                 ))}
                                 <button
                                     onClick={() => paginate(currentPage + 1)}
-                                    disabled={currentPage === Math.ceil(sortedProducts.length / productsPerPage)}
+                                    disabled={currentPage === Math.ceil(sortedtempProducts.length / tempProductsPerPage)}
                                     className="p-2 rounded-md bg-white text-[#4d7c0f] disabled:opacity-50"
                                 >
                                     <ChevronRight className="w-5 h-5" />

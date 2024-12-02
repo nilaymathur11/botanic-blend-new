@@ -1,5 +1,5 @@
+import { supabase } from '@/utils/supabase/supabaseClient';
 import { NextResponse } from 'next/server';
-import { supabase } from '@/utils/supabaseClient';
 
 export async function POST(request: Request) {
   const { userId, productId, quantity } = await request.json();

@@ -3,19 +3,13 @@ import { ShoppingCart } from 'lucide-react'
 import Link from 'next/link';
 import { redirectToWhatsApp } from '@/utils/whatsappRedirect';
 import Image from 'next/image';
+import { IProduct } from '@/utils/interfaces/CommonInterfaces';
 
-interface ProductCardProps {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-}
-
-export default function ProductCard({ product, type }: { product: ProductCardProps; type: string }) {
+export default function ProductCard({ product, type }: { product: IProduct; type: string }) {
   return (
     <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-md transition-transform hover:scale-105">
       <Link href={`/products/${product.id}`}>
-        <Image unoptimized={true} width={0} height={0} src={product.image} alt={product.name} className="w-full h-48 object-cover" />
+        <Image unoptimized={true} width={0} height={0} src={product.images[0]} alt={product.name} className="w-full h-48 object-cover" />
       </Link>
       <div className="p-4">
         <div className="font-semibold text-[#4d7c0f]">{product.name}</div>

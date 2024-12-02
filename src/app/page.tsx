@@ -1,45 +1,43 @@
 "use client"
+
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch } from '@/redux/store'
+import { fetchProducts, selectProductsStatus } from '@/redux/slices/productSlice'
 import { Leaf, Droplet, Sun } from 'lucide-react'
-import ProductCard from './components/common/ProductCard'
+import Link from 'next/link'
+import Image from 'next/image'
+import Header from './components/common/Header'
+import Footer from './components/common/Footer'
 import Hero from './components/home/Hero'
-import Link from 'next/link';
-import Image from 'next/image';
-import CommonSlider from './components/common/CommonSlider';
-import Header from './components/common/Header';
-import Footer from './components/common/Footer';
-
-const testimonials = [
-  { name: "Sarah L.", content: "Botanic Blend's products have transformed my skincare routine. My skin has never looked better!" },
-  { name: "Michael R.", content: "I love how these products are all-natural and environmentally friendly. Great for my skin and the planet!" },
-  { name: "Emma T.", content: "The Revitalizing Rosehip Serum is a game-changer. I've noticed a significant improvement in my skin's texture." }
-]
-
-const products = [
-  { id: 1, name: "Revitalizing Rosehip Serum", price: 39.99, image: "/aloe-cream.jpeg" },
-  { id: 2, name: "Soothing Lavender Night Cream", price: 29.99, image: "/aloe-cream.jpeg" },
-  { id: 3, name: "Hydrating Aloe Vera Gel", price: 19.99, image: "/aloe-cream.jpeg" },
-  { id: 4, name: "Nourishing Avocado Face Mask", price: 24.99, image: "/aloe-cream.jpeg" }
-]
+import BestSellers from './components/home/BestSellers'
+import NewProducts from './components/home/NewProducts'
+import PageLoader from './components/common/PageLoader'
 
 export default function HomePage() {
+  const dispatch = useDispatch<AppDispatch>()
+  const productsStatus = useSelector(selectProductsStatus)
+
+  useEffect(() => {
+    if (productsStatus === 'idle') {
+      dispatch(fetchProducts())
+    }
+  }, [productsStatus, dispatch])
+
+  if (productsStatus !== "succeeded") {
+    return <PageLoader />
+  }
+
   return (
     <>
       <Header />
-      <div className="flex flex-col min-h-[86dvh] bg-[#F5F5F5] text-slate-800">
+      <div className="flex flex-col min-h-[86dvh] text-slate-800">
         <main className="flex-1">
           <Hero />
-          <section className="py-16 bg-white">
-            <div className="container mx-auto px-4 md:px-6">
-              <div className="text-3xl font-bold text-center text-[#4d7c0f] mb-12">Our Bestsellers</div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {products.map((product) => (
-                  <ProductCard key={product.id} product={product} type={"view"} />
-                ))}
-              </div>
-            </div>
-          </section>
+          <BestSellers />
+          <NewProducts />
 
-          <section className="py-16 bg-[#F5F5F5]">
+          <section className="py-16 bg-white bg-opacity-80">
             <div className="container mx-auto px-4 md:px-6">
               <div className="flex flex-col md:flex-row items-center gap-8">
                 <div className="md:w-1/2">
@@ -94,17 +92,6 @@ export default function HomePage() {
               </div>
             </div>
           </section>
-
-          <CommonSlider
-            items={testimonials}
-            title="What Our Customers Say"
-            renderItem={(testimonial) => (
-              <>
-                <p className="text-lg text-[#666666] mb-4">{`"${testimonial.content}"`}</p>
-                <div className="font-semibold text-[#4d7c0f]">{testimonial.name}</div>
-              </>
-            )}
-          />
         </main>
       </div>
       <Footer />
