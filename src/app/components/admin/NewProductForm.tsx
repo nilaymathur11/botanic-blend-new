@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { X, Upload, Loader2, Plus } from 'lucide-react'
+import { X, Upload, Loader2, Plus, Minus } from 'lucide-react'
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
@@ -67,9 +67,15 @@ export default function NewProductForm({ onSubmit, onCancel, initialData }: NewP
     const handleArrayInputChange = (
         index: number,
         value: string,
-        setter: React.Dispatch<React.SetStateAction<string[]>>
+        setter: React.Dispatch<React.SetStateAction<string[]>>,
+        remove: boolean = false
     ) => {
-        setter(prev => prev.map((item, i) => (i === index ? value : item)))
+        setter(prev => {
+            if (remove) {
+                return prev.filter((_, i) => i !== index);
+            }
+            return prev.map((item, i) => (i === index ? value : item));
+        });
     }
 
     const addArrayInput = (setter: React.Dispatch<React.SetStateAction<string[]>>) => {
@@ -184,7 +190,7 @@ export default function NewProductForm({ onSubmit, onCancel, initialData }: NewP
                     </div>
                     {['uses', 'ingredients', 'steps_to_use'].map((field) => (
                         <div key={field} className="space-y-2">
-                            <Label>{field === "steps_to_use" ? "Steps To Use" : field.charAt(0).toUpperCase() + field.slice(1)}</Label>
+                            <Label className="text-lg font-medium">{field === "steps_to_use" ? "Steps To Use" : field.charAt(0).toUpperCase() + field.slice(1)}</Label>
                             {(field === 'uses' ? uses : field === 'ingredients' ? ingredients : steps_to_use).map((item, index) => (
                                 <div key={index} className="flex items-center space-x-2">
                                     <Input
@@ -196,6 +202,16 @@ export default function NewProductForm({ onSubmit, onCancel, initialData }: NewP
                                     {index === (field === 'uses' ? uses : field === 'ingredients' ? ingredients : steps_to_use).length - 1 && (
                                         <Button type="button" onClick={() => addArrayInput(field === 'uses' ? setUses : field === 'ingredients' ? setIngredients : setSteps_to_use)} size="icon">
                                             <Plus className="h-4 w-4" />
+                                        </Button>
+                                    )}
+                                    {index > 0 && (
+                                        <Button
+                                            type="button"
+                                            onClick={() => handleArrayInputChange(index, '', field === 'uses' ? setUses : field === 'ingredients' ? setIngredients : setSteps_to_use, true)}
+                                            size="icon"
+                                            variant="destructive"
+                                        >
+                                            <Minus className="h-4 w-4" />
                                         </Button>
                                     )}
                                 </div>
@@ -225,14 +241,7 @@ export default function NewProductForm({ onSubmit, onCancel, initialData }: NewP
                         <div className="flex flex-wrap items-center gap-4">
                             {previewUrls.map((url, index) => (
                                 <div key={index} className="relative">
-                                    <Image
-                                        unoptimized={true}
-                                        width={0}
-                                        height={0}
-                                        src={url}
-                                        alt="img"
-                                        className="w-24 h-24 object-cover rounded"
-                                    />
+                                    <img src={url} alt={`Preview ${index + 1}`} className="w-24 h-24 object-cover rounded" />
                                     <Button
                                         type="button"
                                         variant="destructive"
