@@ -90,7 +90,7 @@ export default function SingleProductPage() {
   const handleBuyNow = () => {
     handleAddToCart()
     if (product) {
-      redirectToWhatsApp(`I'd like to purchase: ${product.name}\nQuantity: 1\nTotal: $${product.price.toFixed(2)}`)
+      redirectToWhatsApp(`I'd like to purchase: ${product.name}\nQuantity: 1\nTotal: ₹${product.price.toFixed(2)}`)
     }
   }
 
