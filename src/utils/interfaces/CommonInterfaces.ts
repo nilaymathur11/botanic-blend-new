@@ -1,19 +1,8 @@
-import { Dispatch, SetStateAction } from "react";
-
-export interface CustomSelectProps {
-    options: {
-        value: string;
-        label: string;
-    }[];
-    value: SetStateAction<string>
-    onChange: Dispatch<SetStateAction<string>>;
-    label: string;
-}
-
 export interface IProduct {
     id?: string;
     name: string;
     price: number;
+    original_price: number;
     stock: number;
     images: string[];
     is_new: boolean;
@@ -42,4 +31,20 @@ export interface ProductState {
     items: IProduct[];
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
     error: string | null;
+}
+
+export interface PaginationProps {
+    currentPage: number
+    totalPages: number
+    onPageChange: (page: number) => void
+}
+
+export interface ProductCardProps {
+    product: IProduct
+    type: 'buy' | 'edit' | 'view'
+}
+
+export interface CartProps {
+    isOpen: boolean
+    onClose: () => void
 }

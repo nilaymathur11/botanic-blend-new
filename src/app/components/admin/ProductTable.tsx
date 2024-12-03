@@ -20,6 +20,7 @@ export function ProductsTable({ products, setEditingProduct, handleDeleteProduct
                     <TableRow>
                         <TableHead className="w-[200px]">Name</TableHead>
                         <TableHead>Price</TableHead>
+                        <TableHead>Original Price</TableHead>
                         <TableHead>Stock</TableHead>
                         <TableHead>Category</TableHead>
                         <TableHead>Description</TableHead>
@@ -49,7 +50,8 @@ export function ProductsTable({ products, setEditingProduct, handleDeleteProduct
                                         <span>{product.name}</span>
                                     </div>
                                 </TableCell>
-                                <TableCell>{product.price}</TableCell>
+                                <TableCell>₹{product.price}</TableCell>
+                                <TableCell>₹{product.original_price}</TableCell>
                                 <TableCell>{product.stock}</TableCell>
                                 <TableCell>{product.category}</TableCell>
                                 <TableCell>{product.description.substring(0, 50)}...</TableCell>

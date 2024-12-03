@@ -1,6 +1,6 @@
-export function redirectToWhatsApp(productName: string) {
-    const phoneNumber = "1234567890";
-    const message = encodeURIComponent(`Hello, I'm interested in purchasing ${productName}. Can you provide more information?`);
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+export const redirectToWhatsApp = (message: string) => {
+    const phoneNumber = '7014172155';
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
-}
+};

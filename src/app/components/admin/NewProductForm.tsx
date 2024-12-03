@@ -15,6 +15,7 @@ import Image from 'next/image'
 export default function NewProductForm({ onSubmit, onCancel, initialData }: NewProductFormProps) {
     const [name, setName] = useState(initialData?.name || "");
     const [price, setPrice] = useState(initialData?.price?.toString() || "");
+    const [original_price, setOriginal_price] = useState(initialData?.original_price?.toString() || "");
     const [stock, setStock] = useState(initialData?.stock?.toString() || "");
     const [images, setImages] = useState<(File | string)[]>(initialData?.images || []);
     const [previewUrls, setPreviewUrls] = useState<string[]>(initialData?.images || []);
@@ -104,6 +105,7 @@ export default function NewProductForm({ onSubmit, onCancel, initialData }: NewP
                 stock: parseInt(stock),
                 images: imageUrls,
                 video: videoUrl,
+                original_price: parseFloat(original_price),
                 category,
                 description,
                 uses: uses.filter(Boolean),
@@ -121,7 +123,7 @@ export default function NewProductForm({ onSubmit, onCancel, initialData }: NewP
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center overflow-y-auto z-50">
-            <div className="bg-white p-8 rounded-lg w-full max-w-2xl my-8 mx-4 md:mx-auto max-h-[90vh] overflow-y-auto">
+            <div className="bg-white p-8 rounded-lg w-full max-w-3xl my-8 mx-4 md:mx-auto max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-bold text-gray-900">{initialData ? 'Edit Product' : 'Add New Product'}</h2>
                     <Button variant="ghost" size="icon" onClick={onCancel}>
@@ -139,9 +141,9 @@ export default function NewProductForm({ onSubmit, onCancel, initialData }: NewP
                             required
                         />
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="price">Price</Label>
+                            <Label htmlFor="price">Price (₹)</Label>
                             <Input
                                 type="number"
                                 id="price"
@@ -149,7 +151,19 @@ export default function NewProductForm({ onSubmit, onCancel, initialData }: NewP
                                 onChange={(e) => setPrice(e.target.value)}
                                 className="w-full"
                                 required
-                                step="0.01"
+                                step="1"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="price">Original Price (₹)</Label>
+                            <Input
+                                type="number"
+                                id="original_price"
+                                value={original_price}
+                                onChange={(e) => setOriginal_price(e.target.value)}
+                                className="w-full"
+                                required
+                                step="1"
                             />
                         </div>
                         <div className="space-y-2">
@@ -241,7 +255,13 @@ export default function NewProductForm({ onSubmit, onCancel, initialData }: NewP
                         <div className="flex flex-wrap items-center gap-4">
                             {previewUrls.map((url, index) => (
                                 <div key={index} className="relative">
-                                    <img src={url} alt={`Preview ${index + 1}`} className="w-24 h-24 object-cover rounded" />
+                                    <Image
+                                        width={0}
+                                        height={0}
+                                        alt={"img"}
+                                        src={url}
+                                        className="w-24 h-24 object-cover rounded"
+                                    />
                                     <Button
                                         type="button"
                                         variant="destructive"
