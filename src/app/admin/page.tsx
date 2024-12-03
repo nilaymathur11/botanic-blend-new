@@ -184,7 +184,7 @@ export default function AdminPanel() {
                         </Button>
                     </form>
                     <p className="text-center text-green-800 text-xs">
-                        &copy;2023 Botanic Blend. All rights reserved.
+                        &copy;2024 Botanic Blend. All rights reserved.
                     </p>
                 </div>
             </div>
